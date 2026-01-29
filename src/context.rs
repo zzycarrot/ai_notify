@@ -36,6 +36,14 @@ impl fmt::Display for ActivityType {
 }
 
 impl UserContext {
+    /// 创建新的用户上下文 (用于测试)
+    pub fn new() -> Self {
+        Self {
+            app_name: String::new(),
+            window_title: String::new(),
+        }
+    }
+
     /// 获取当前用户上下文
     pub fn current() -> Option<Self> {
         match get_active_window() {
