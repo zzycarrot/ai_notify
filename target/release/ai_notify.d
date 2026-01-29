@@ -1,0 +1,1 @@
+/Users/jun/code/ai_notify/target/release/ai_notify: /Users/jun/code/ai_notify/src/analyzer.rs /Users/jun/code/ai_notify/src/context.rs /Users/jun/code/ai_notify/src/filter.rs /Users/jun/code/ai_notify/src/lib.rs /Users/jun/code/ai_notify/src/main.rs /Users/jun/code/ai_notify/src/notification.rs

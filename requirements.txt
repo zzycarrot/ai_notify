@@ -1,0 +1,9 @@
+mlx>=0.5.0
+mlx-lm>=0.0.1
+pyobjc>=9.0
+pyobjc-framework-Quartz>=9.0
+pyobjc-framework-AppKit>=9.0
+pyobjc-framework-Accessibility>=9.0
+transformers>=4.30.0
+torch>=2.0.0
+huggingface-hub>=0.16.0
