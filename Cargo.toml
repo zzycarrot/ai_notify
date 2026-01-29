@@ -20,7 +20,16 @@ regex = "1.0"
 lazy_static = "1.4"
 reqwest = { version = "0.11", features = ["json"], optional = true }
 
+# === Candle AI Framework (Local LLM Inference) ===
+# Core library with Metal GPU acceleration for Apple Silicon
+candle-core = { version = "0.8.0", features = ["metal"] }
+# Neural network operations
+candle-nn = "0.8.0"
+# Pre-defined model architectures (includes Qwen2/3 support)
+candle-transformers = "0.8.0"
+# Tokenizer with comprehensive Unicode support
+tokenizers = { version = "0.19.1", features = ["onig"] }
+
 [features]
 default = []
 huggingface-api = ["reqwest"]
-mlx-support = []

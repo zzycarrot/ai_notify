@@ -8,9 +8,12 @@
 
 use crate::context::UserContext;
 use crate::filter::{NotificationFilter, FilterResult};
-use crate::llm::{LLMAnalysis, LLMCache, LLMClient, LLMConfig};
+use crate::llm::{LLMAnalysis, LLMClient, LLMConfig};
 use anyhow::Result;
 use tracing::{debug, warn};
+use std::collections::HashMap;
+use std::sync::Arc;
+use tokio::sync::RwLock;
 
 /// 通知处理配置
 #[derive(Clone, Debug)]
@@ -41,7 +44,7 @@ pub struct HybridNotificationHandler {
     config: NotificationHandlerConfig,
     keyword_filter: NotificationFilter,
     llm_client: Option<LLMClient>,
-    cache: LLMCache,
+    cache: Arc<RwLock<HashMap<String, LLMAnalysis>>>,
 }
 
 impl HybridNotificationHandler {
@@ -56,7 +59,7 @@ impl HybridNotificationHandler {
             config,
             keyword_filter: NotificationFilter::new(),
             llm_client,
-            cache: LLMCache::new(),
+            cache: Arc::new(RwLock::new(HashMap::new())),
         }
     }
 
@@ -95,15 +98,15 @@ impl HybridNotificationHandler {
         // 第二步: 如果启用 LLM 且置信度不够高，使用 LLM 推理
         if self.config.enable_llm && self.llm_client.is_some() {
             let activity = context.analyze_activity();
-            let cache_key = LLMCache::make_key(title, body, app_name);
+            let cache_key = format!("{}:{}:{}", title, body, app_name);
 
             // 检查缓存
             if self.config.enable_cache {
-                if let Some(cached) = self.cache.get(&cache_key).await {
+                if let Some(cached) = self.cache.read().await.get(&cache_key) {
                     debug!("LLM result from cache");
                     return Ok(self.merge_results(
                         keyword_result,
-                        cached,
+                        cached.clone(),
                         "llm_cache".to_string(),
                     ));
                 }
@@ -119,7 +122,7 @@ impl HybridNotificationHandler {
             {
                 // 缓存结果
                 if self.config.enable_cache {
-                    self.cache.set(cache_key, llm_result.clone()).await;
+                    self.cache.write().await.insert(cache_key, llm_result.clone());
                 }
 
                 debug!(
