@@ -1,2 +1,0 @@
-unsafe extern "C" fn(*mut __AXObserver, *mut __AXUIElement, *const core_foundation_sys::string::__CFString, *mut c_void)
-Option<extern "C" fn(*mut {type error}, *mut {type error}, *mut {type error}, *mut c_void) {notification_callback}>
